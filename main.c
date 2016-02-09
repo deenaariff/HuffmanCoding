@@ -13,19 +13,18 @@
 #define rchild(X) (2(X)+2)
 #define parent(X) ((X-1)/2)
 
-
 struct node {
    struct node* left;
    struct node* right;
-   int data;
-};
-
-struct heap {
-   Node* data;
-   int count;
+   int val;
 };
 
 typedef struct node Node;
+
+struct heap {
+   Node* data[256];
+   int count;
+};
 
 void swap(struct heap* Heap, int index1, int index2) {
    Node* temp1 = Heap -> data[index1];
@@ -41,7 +40,7 @@ void reHeapDown (struct heap* Heap) {
 void reHeapUp(struct heap* Heap) {
    int index = Heap -> count;
    Node* curr = Heap -> data[index];
-   while(index !=0 || Heap -> data[parent(index)] -> data > curr -> data) {
+   while(index !=0 || Heap -> data[parent(index)] -> val > curr -> val) {
       swap(Heap, parent(index), index);
    }
 };
@@ -68,7 +67,7 @@ int insert(struct heap* Heap, Node* insertion) {
 
 Node* combine(Node* node1, Node* node2) {
    Node* tmp;
-   tmp -> data = node1 -> data + node2 -> data;
+   tmp -> val = node1 -> val + node2 -> val;
    tmp -> left = node1;
    tmp -> right = node2;
    return tmp;
@@ -76,7 +75,6 @@ Node* combine(Node* node1, Node* node2) {
 
 int main(int argc, const char * argv[]) {
    struct heap* huffman;
-   huffman -> data = (Node*)calloc(sizeof(Node*)*256);
    while (huffman -> count != 1) {
       Node* tmp1 = pop(huffman);
       Node* tmp2 = pop(huffman);
