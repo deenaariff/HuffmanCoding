@@ -13,6 +13,7 @@
 #define rchild(X) (2(X)+2)
 #define parent(X) ((X-1)/2)
 
+// structure for node
 struct node {
    struct node* left;
    struct node* right;
@@ -21,22 +22,26 @@ struct node {
 
 typedef struct node Node;
 
+// structure for heap
 struct heap {
    Node* data[256];
    int count;
 };
 
+// Swap values in indexes of Heap
 void swap(struct heap* Heap, int index1, int index2) {
    Node* temp1 = Heap -> data[index1];
    Heap -> data[index1] = Heap -> data[index2];
    Heap -> data[index2] = temp1;
 };
 
+// Re-Order Heap from Top
 void reHeapDown (struct heap* Heap) {
    int index = 0;
    while()
 };
 
+// Re-Order Heap from Bottom
 void reHeapUp(struct heap* Heap) {
    int index = Heap -> count;
    Node* curr = Heap -> data[index];
@@ -45,6 +50,7 @@ void reHeapUp(struct heap* Heap) {
    }
 };
 
+// Return min value from Heap and Resort
 Node* pop(struct heap* Heap) {
    assert(Heap != NULL && Heap -> count != 0);
    int size = Heap -> count;
@@ -55,6 +61,7 @@ Node* pop(struct heap* Heap) {
    return tmp;
 };
 
+// Insert into Heap and Sort
 int insert(struct heap* Heap, Node* insertion) {
    assert(Heap != NULL && Heap -> count != 256);
    Heap -> data[Heap -> count] = insertion;
@@ -65,6 +72,7 @@ int insert(struct heap* Heap, Node* insertion) {
    return 0;
 };
 
+// combine two nodes into one tree
 Node* combine(Node* node1, Node* node2) {
    Node* tmp;
    tmp -> val = node1 -> val + node2 -> val;
