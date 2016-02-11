@@ -8,9 +8,10 @@
 
 #include <stdio.h>
 #include "assert.h"
+#include <stdlib.h>
 
-#define lchild(X) (2(X)+1)
-#define rchild(X) (2(X)+2)
+#define LCHILD(X) (2(X)+1)
+#define RCHILD(X) (2(X)+2)
 #define parent(X) ((X-1)/2)
 
 // structure for node
@@ -30,15 +31,32 @@ struct heap {
 
 // Swap values in indexes of Heap
 void swap(struct heap* Heap, int index1, int index2) {
-   Node* temp1 = Heap -> data[index1];
+   Node* temp1 = malloc(sizeof(Node*));
+   temp1 = Heap -> data[index1];
    Heap -> data[index1] = Heap -> data[index2];
    Heap -> data[index2] = temp1;
+
 };
 
 // Re-Order Heap from Top
 void reHeapDown (struct heap* Heap) {
    int index = 0;
-   while()
+   int size = Heap -> count;
+   while((2*(index)+1) < size && (2*(index)+2) < size) {
+      int minChild = index;
+      int right = (2*(index)+2);
+      int left = (2*(index)+1);
+      if(Heap -> data[left])
+         minChild = Heap -> data[left] -> val;
+      if(Heap -> data[right]) {
+         if((Heap -> data[right] -> val) > minChild)
+            minChild = Heap -> data[right] -> val;
+      }
+      if(Heap -> data[index] -> val > Heap -> data[minChild] -> val) {
+         swap(Heap, index, minChild);
+         index = minChild;
+      }
+   }
 };
 
 // Re-Order Heap from Bottom
@@ -54,7 +72,8 @@ void reHeapUp(struct heap* Heap) {
 Node* pop(struct heap* Heap) {
    assert(Heap != NULL && Heap -> count != 0);
    int size = Heap -> count;
-   Node* tmp = Heap -> data[0];
+   Node* tmp = malloc(sizeof(Node*));
+   tmp = Heap -> data[0];
    Heap -> data[0] = Heap -> data[size];
    Heap -> count--;
    reHeapDown(Heap);
@@ -82,13 +101,41 @@ Node* combine(Node* node1, Node* node2) {
 };
 
 int main(int argc, const char * argv[]) {
-   struct heap* huffman;
+   FILE *fp;
+   int *freq = calloc(256, sizeof(int));
+   struct heap* huffman = malloc(sizeof(struct heap*));
+   int val = 0;
+
+   // Open and Read File
+   fp = fopen("test.rtf", "r");
+   if (fp == NULL) {
+      printf("File not Found\n");
+      return 0;
+   }
+   while ((val = fgetc(fp)) != EOF)
+      freq[val]++;
+   printf("Read file");
+
+   // Put frequencies into freq array
+   int i = 0;
+   for(i = 0; i < 254; i++) {
+      Node* tmp = malloc(sizeof(Node*));
+      tmp -> val = freq[i];
+      insert(huffman, tmp);
+   }
+
+   // Set constant min-heap min
+   Node* eof;
+   eof -> val = -1;
+   insert(huffman, eof);
+
    while (huffman -> count != 1) {
       Node* tmp1 = pop(huffman);
       Node* tmp2 = pop(huffman);
       tmp2 = combine(tmp1, tmp2);
       insert(huffman, tmp2);
    }
-   printf("Hello, World!\n");
+
+   printf("Complete!");
    return 0;
 }
